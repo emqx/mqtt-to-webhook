@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  emqx-enterprise:
+    image: emqx/emqx:5.0.26
+    container_name: emqx
+    healthcheck:
+      test: ["CMD", "emqx", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+    ports:
+      - 1883:1883
+      - 18083:18083
+    volumes:
+      - $PWD/emqx/cluster.hocon:/opt/emqx/data/configs/cluster.hocon
+    depends_on:
+      webserver: 
+        condition: service_started   
+
+  webserver:
+    image: node:18.17-alpine
+    container_name: webserver
+    working_dir: /app
+    volumes:
+      - ./webserver:/app
+    command: sh -c "yarn && node index.js"
+    ports:
+      - 3000:3000
+
+  mqttx-simulate:
+    image: emqx/mqttx-cli:v1.9.3
+    container_name: mqttx-simulate
+    command:
+      - /bin/sh
+      - -c
+      - |
+        mqttx simulate -sc tesla -c 1 -im 5000 -h emqx-enterprise
+    depends_on:
+      emqx-enterprise:
+        condition: service_healthy
+
+networks:
+  emqx-net:
+    name: emqx-net

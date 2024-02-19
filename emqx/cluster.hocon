@@ -1,36 +1,47 @@
-bridges {
-  webhook {
-    "handle-events" {
-      connect_timeout = "15s"
-      enable_pipelining = 100
-      headers {Authorization = "Bearer B53498D3-1752-4AA7-BACA-7013309B7468", "content-type" = "application/json"}
-      method = "post"
-      pool_size = 8
-      pool_type = "random"
-      request_timeout = "15s"
+actions {
+  http {
+    handle-events {
+      connector = handle-events
+      parameters {
+        headers {}
+        method = post
+        path = ""
+        request_timeout = 15s
+      }
       resource_opts {
-        auto_restart_interval = "60s"
-        health_check_interval = "15s"
+        health_check_interval = 15s
         inflight_window = 100
-        max_buffer_bytes = "1GB"
-        query_mode = "async"
-        request_timeout = "15s"
+        max_buffer_bytes = 1GB
+        query_mode = async
         worker_pool_size = 4
       }
-      ssl {enable = false, verify = "verify_peer"}
+    }
+  }
+}
+connectors {
+  http {
+    handle-events {
+      connect_timeout = 15s
+      enable_pipelining = 100
+      headers {Authorization = "Bearer B53498D3-1752-4AA7-BACA-7013309B7468", content-type = "application/json"}
+      pool_size = 8
+      pool_type = random
+      ssl {enable = false, verify = verify_peer}
       url = "http://webserver:3000/events/${event}"
     }
   }
 }
 rule_engine {
   ignore_sys_message = true
-  jq_function_default_timeout = "10s"
+  jq_function_default_timeout = 10s
   rules {
-    "handle-events" {
-      actions = ["webhook:handle-events"]
+    handle-events {
+      actions = ["http:handle-events"]
       description = ""
+      enable = true
       metadata {created_at = 1690189825113}
-      sql = "SELECT\n  *\nFROM\n  \"$events/client_disconnected\",\n  \"$events/client_connected\",\n  \"mqttx/simulate/#\""
+      name = ""
+      sql = "SELECT\n  *\nFROM\n  \"$events/client_disconnected\",\n  \"$events/client_connected\",\n  \"$events/session_subscribed\",\n  \"$events/session_unsubscribed\",\n  \"mqttx/simulate/#\""
     }
   }
 }

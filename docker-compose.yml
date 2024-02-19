@@ -39,6 +39,18 @@ services:
       emqx-enterprise:
         condition: service_healthy
 
+  mqttx-subscriber:
+    image: emqx/mqttx-cli:v1.9.3
+    container_name: mqttx-subscriber
+    command:
+      - /bin/sh
+      - -c
+      - |
+        mqttx sub -t t/1 t/2 -h emqx-enterprise
+    depends_on:
+      emqx-enterprise:
+        condition: service_healthy
+
 networks:
   emqx-net:
     name: emqx-net

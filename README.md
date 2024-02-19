@@ -24,7 +24,7 @@ Webhook is available in EMQX Open Source, but it offers both advantages and disa
 
 | Name      | Version | Description                                                                      |
 | --------- | ------- | -------------------------------------------------------------------------------- |
-| [EMQX](https://www.emqx.io)      | 5.0.3+  | MQTT broker used for message exchange between MQTT clients and the webserver. |
+| [EMQX](https://www.emqx.io)      | 5.5.0+  | MQTT broker used for message exchange between MQTT clients and the webserver. |
 | [MQTTX CLI](https://mqttx.app/cli) | 1.9.3+  | Command-line tool used to generate simulated data for testing.        |
 | [Node.js](https://nodejs.org) | 18.17 | Start a webserver to handle requests from EMQX. |
 
@@ -40,7 +40,7 @@ Webhook is available in EMQX Open Source, but it offers both advantages and disa
 
   ```bash
   $ curl http://localhost:3000/events
-  {"devocesCount":1,"messagesCount":1,"devices":[...],"messages":[...]}
+  {"deviceCount":1,"messageCount":1,"eventsHistoryCount":1,"devices":[...],"eventsHistory":[...],"messages":[...]}
   ```
 
 ## License

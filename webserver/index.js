@@ -135,7 +135,7 @@ const server = http.createServer((req, res) => {
       messageCount: db.messages.length,
       eventsHistoryCount: db.eventsHistory.length,
       ...db,
-    }));
+    }, null, 2));
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('API Not Found');
